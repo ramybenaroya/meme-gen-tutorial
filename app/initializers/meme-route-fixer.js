@@ -36,6 +36,6 @@ export function initialize( /* container, application */ ) {
 }
 
 export default {
-	name: 'current-user',
+	name: 'meme-route-fixer',
 	initialize: initialize
 };
