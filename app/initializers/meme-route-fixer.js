@@ -1,29 +1,41 @@
-import config from 'meme-gen-test/config/environment';
-export function initialize(container, application) {
-	var store = container.lookup('store:main');
-	application.register('user:whoami-proxy', Ember.Object.create({
-		id: config.whoami,
-		name: config.whoami.capitalize()
-	}), {
-		instantiate: false,
-		singleton: true
-	});
-	application.inject('model', 'whoami', 'user:whoami-proxy');
-	application.deferReadiness();
-	store.find('user', config.whoami).then(function(user) {
-		application.register('user:whoami', user, {
-			instantiate: false,
-			singleton: true
-		});
-		application.inject('route', 'whoami', 'user:whoami');
-		application.inject('controller', 'whoami', 'user:whoami');
-		application.advanceReadiness();
-	});
+import Ember from 'ember';
 
+export function initialize( /* container, application */ ) {
+	var MemeRoute;
+	try {
+		MemeRoute = window.requireModule('meme-gen-test/routes/meme');
+	} catch (e) {}
+
+	if (MemeRoute && MemeRoute['default']) {
+		MemeRoute = MemeRoute['default'];
+	} else {
+		MemeRoute = Ember.Route.extend();
+		window.define("meme-gen-test/routes/meme", ["exports"],
+			function(__exports__) {
+				"use strict";
+				__exports__["default"] = MemeRoute;
+			});
+	}
+	MemeRoute.reopen({
+		actions: {
+			error: function(error, transition) {
+				var memeId = Ember.get(transition, 'params.meme.meme_id'),
+					record;
+				if (memeId) {
+					record = this.store.recordForId('meme', memeId);
+					try {
+						if (record && record.get('isEmpty')) {
+							this.store.unloadRecord(record);
+						}
+					} catch (e) {}
+					return this.replaceWith('memes');
+				}
+			}
+		}
+	});
 }
 
 export default {
 	name: 'current-user',
-	after: 'store',
 	initialize: initialize
 };
