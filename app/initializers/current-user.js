@@ -1,4 +1,6 @@
+import Ember from 'ember';
 import config from 'meme-gen-test/config/environment';
+
 export function initialize(container, application) {
 	var store = container.lookup('store:main');
 	application.register('user:whoami-proxy', Ember.Object.create({
