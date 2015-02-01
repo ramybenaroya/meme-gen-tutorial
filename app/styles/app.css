@@ -1,3 +1,156 @@
 html, body {
-  margin: 20px;
+  margin: 0px;
+}
+
+
+nav {
+	width: 100%;
+}
+.meme-item {
+	width: 500px;
+	height: 500px;
+	min-width: 500px;
+	min-height: 500px;
+	max-width: 500px;
+	max-height: 500px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: 50%;
+	font-family: 'Oswald', sans-serif;
+	color: white;
+	font-weight: bold;
+	-webkit-text-stroke-width: 2px;
+   -webkit-text-stroke-color: black;
+	font-size: 60px;
+	text-align: center;
+	border: 3px solid black;
+	border-radius: 5px;
+	overflow: hidden;
+	position: relative;
+
+}
+
+.meme-item.editable {
+	margin: 0 auto;
+}
+
+.meme-item.not-editable *{
+	-moz-user-select: none;
+  	-webkit-user-select: none;
+  	-ms-user-select: none;
+}
+
+.meme-item .opener, .meme-item .closer{
+	position: absolute !important;
+	width: 100%;
+	height: auto !important;
+}
+
+.opener {
+	z-index: 1;
+}
+
+.closer {
+	z-index: 2;
+}
+
+.meme-list-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.meme-list-item .label {
+	cursor: default;
+}
+
+.memes-container {
+	width: 650px;
+	margin: 0 auto;
+	position: relative;
+}
+.memes-filters {
+	position: absolute;
+	top: 0;
+	left: -220px;
+	width: 200px;
+}
+.memes-list  {
+	min-height: 50px;
+}
+
+.memes-container > * {
+	
+}
+
+.meme-controls {
+	max-height: 500px;
+	min-height: 500px;
+	min-width: 300px;
+	max-width: 300px;
+	margin-right: 20px;
+}
+
+.meme-panel {
+	width: 960px;
+	margin: 0 auto;
+}
+
+.label {
+	display: inline-block;
+	cursor: pointer;
+	margin: 5px;
+}
+
+.panel-footer {
+	width: 100%;
+}
+
+.panel-footer, .panel-footer *{
+	-moz-user-select: none;
+  	-webkit-user-select: none;
+  	-ms-user-select: none;
+}
+
+.panel-footer .label {
+	float: right;
+	margin-top: 9px;
+}
+
+a:hover, a:focus {
+	text-decoration: none !important;
+}
+
+.glyphicon-heart:hover {
+	color: magenta;
+}
+
+.liked .glyphicon-heart, .liked .glyphicon-heart:hover{
+	color: crimson;
+}
+
+.glyphicon-heart + .badge {
+	background-color: darkseagreen;
+}
+
+.flex {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}
+
+.right {
+	float: right;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.center {
+	text-align: center;
+}
+
+.full-width{
+	width: 100%;
 }
