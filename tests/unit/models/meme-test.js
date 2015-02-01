@@ -2,10 +2,11 @@ import {
   moduleForModel,
   test
 } from 'ember-qunit';
+import User from 'meme-gen-tutorial/models/user';
 
 moduleForModel('meme', 'Meme', {
   // Specify the other units that are required for this test.
-  needs: []
+  needs: ['model:user']
 });
 
 test('it exists', function() {
