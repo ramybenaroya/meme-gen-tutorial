@@ -1,7 +1,7 @@
-<div class='opener'>
-	{{text-editor text=content.opener contenteditable=contentEditableValue}}
+<div class='opener' {{bind-attr style=openerStyle}}>
+	{{text-editor text=content.opener editable=editable}}
 </div>
-<div class='closer'>
-	{{text-editor text=content.closer contenteditable=contentEditableValue}}
+<div class='closer' {{bind-attr style=closerStyle}}>
+	{{text-editor text=content.closer editable=editable}}
 </div>
 
