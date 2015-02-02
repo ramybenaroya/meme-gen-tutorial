@@ -15,7 +15,7 @@
 	</div>
 	<div class="memes-list">
 		{{#each meme in filteredMemes}}
-			{{meme-list-item content=meme deleteMeme='deleteMeme'}}
+			{{meme-list-item content=meme toggleLike='toggleLike' deleteMeme='deleteMeme'}}
 		{{else}}
 			<div class="panel panel-default">
 			  <div class="panel-body center">

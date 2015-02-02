@@ -5,6 +5,9 @@ export default Ember.Component.extend({
 	actions: {
 		deleteMeme: function(meme){
 			this.sendAction('deleteMeme', meme);
+		},
+		toggleLike: function(meme){
+			this.sendAction('toggleLike', meme);
 		}
 	}
 });
