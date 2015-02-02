@@ -5,7 +5,7 @@ module.exports = function(environment) {
     modulePrefix: 'meme-gen-tutorial',
     environment: environment,
     baseURL: '/',
-    locationType: 'auto',
+    locationType: 'hash',
     firebase: 'https://flickering-fire-9959.firebaseio.com/memeGen',
     whoami: 'rami',
     EmberENV: {
