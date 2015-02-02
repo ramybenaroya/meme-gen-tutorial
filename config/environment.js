@@ -7,6 +7,7 @@ module.exports = function(environment) {
     baseURL: '/',
     locationType: 'hash',
     firebase: 'https://flickering-fire-9959.firebaseio.com/memeGen',
+    defaultMemeImageSrc'http://lh4.ggpht.com/NgmqkelleJw8GYypJRPyo10HUnMZ7aR8YbkT8ZNXAQC9KLChDT-yGvOy9R4WGEuEUDpjs-ERNYx6kU9PKWDS9OAtAOsp=s0',
     whoami: 'rami',
     EmberENV: {
       FEATURES: {
