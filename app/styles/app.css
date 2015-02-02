@@ -48,10 +48,12 @@ nav {
 
 .opener {
 	z-index: 1;
+	top: 0;
 }
 
 .closer {
 	z-index: 2;
+	bottom: 0;
 }
 
 .meme-list-item {
