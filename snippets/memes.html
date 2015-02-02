@@ -1,0 +1,36 @@
+<div class="memes-container">
+	<div class="memes-filters">
+		<div class="form-group">
+			<a href="link-to:/memes/create">
+				<button type="button" class="btn btn-default full-width" aria-label="Left Align">
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					Create a Meme
+				</button>
+			</a>
+		</div>
+		<div class="form-group">
+			<input class="form-control" placeholder="Filter by meme text" type="text">
+		</div>
+		<div class="users">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Filter by Users
+				</div>
+				<div class="panel-body">
+					<!-- 
+					{{#each user in model.users}}
+						{{user-filter-toggler content=user}}
+					{{/each}}
+					-->
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="memes-list">
+		<!--
+		{{#each meme in filteredContent}}
+			{{meme-list-item content=meme}}
+		{{/each}}
+		-->
+	</div>
+</div>

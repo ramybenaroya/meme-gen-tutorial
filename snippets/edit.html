@@ -1,0 +1,35 @@
+<div class="panel panel-default meme-panel">
+	<div class="panel-heading">
+		<span>Edit Meme</span>
+	</div>
+	<div class="panel-body flex">
+		<div class="panel panel-default meme-controls">
+			<div class="panel-body">
+				<div class="form-group">
+					<label>Image URL</label>
+					<!-- {{input placeholder="Image URL" classNames="form-control" value=model.imgSrc}} -->
+				</div>
+				<div class="form-group">
+					<label>Opener Font Size</label>
+					<!-- {{input type="range" classNames="form-control" value=model.openerFontSize}} -->
+				</div>
+				<div class="form-group">
+					<label>Closer Font Size</label>
+					<!-- {{input type="range" classNames="form-control" value=model.closerFontSize}} -->
+				</div>
+			</div>
+		</div>
+		<!-- {{meme-item editable=true content=model}} -->
+	</div>
+	<div class="panel-footer align-right">
+		<!-- onclick: save meme -->
+		<button type="button" class="btn btn-success">
+			Save
+		</button>
+		<a class="ember-view" href="link-to:/memes">
+			<button type="button" class="btn btn-default">
+				Cancel
+			</button>
+		</a>
+	</div>
+</div>

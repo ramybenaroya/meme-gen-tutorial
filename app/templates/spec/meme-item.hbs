@@ -1,0 +1,35 @@
+<div class="panel panel-default">
+	<div class="panel-heading"><h3 class="panel-title">meme-item Component</h3></div>
+	<div class='panel-body'>
+		{{#element-highlighter data=highlightData.memeItem}}
+			<div class="panel panel-default">
+				<div class="panel-heading"><h3 class="panel-title">Not Editable</h3></div>
+				<div class='panel-body'>
+					<div class='row'>
+						<div class="col-xs-6 frame">
+							{{partial 'frames/meme-item'}}
+						</div>
+						<div class="col-xs-6">
+							{{code-snippet name="meme-item.html" indent=false language='html'}}
+						</div>
+					</div>
+				</div>
+			</div>
+		{{/element-highlighter}}
+		{{#element-highlighter data=highlightData.memeItem}}
+			<div class="panel panel-default">
+				<div class="panel-heading"><h3 class="panel-title">Editable</h3></div>
+				<div class='panel-body'>
+					<div class='row'>
+						<div class="col-xs-6 frame">
+							{{partial 'frames/meme-item-editable'}}
+						</div>
+						<div class="col-xs-6">
+							{{code-snippet name="meme-item-editable.html" indent=false language='html'}}
+						</div>
+					</div>
+				</div>
+			</div>
+		{{/element-highlighter}}
+	</div>
+</div>

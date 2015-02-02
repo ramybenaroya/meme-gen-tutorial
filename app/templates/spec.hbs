@@ -1,0 +1,23 @@
+<div class="panel panel-default">
+	<div class='panel-body'>
+		<div class='row'>
+			<div class="col-xs-2">
+				<h4>Routes</h4>
+				<div class="list-group">
+					{{#link-to 'spec.memes-route' classNames='list-group-item'}}/memes{{/link-to}}
+					{{#link-to 'spec.create-route' classNames='list-group-item'}}/memes/create{{/link-to}}
+					{{#link-to 'spec.edit-route' classNames='list-group-item'}}/memes/:meme_id/edit{{/link-to}}
+				</div>
+				<h4>Components</h4>
+				<div class="list-group">
+					{{#link-to 'spec.meme-list-item' classNames='list-group-item'}}meme-list-item{{/link-to}}
+					{{#link-to 'spec.user-filter-toggler' classNames='list-group-item'}}user-filter-toggler{{/link-to}}
+					{{#link-to 'spec.meme-item' classNames='list-group-item'}}meme-item{{/link-to}}
+				</div>
+			</div>
+			<div class="col-xs-10">
+				{{outlet}}
+			</div>
+		</div>	
+	</div>
+</div>

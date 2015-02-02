@@ -154,3 +154,17 @@ a:hover, a:focus {
 .full-width{
 	width: 100%;
 }
+
+.hover-highlight {
+	box-shadow: inset 0 0 0px 2px rgba(0, 255, 0, 1), 0 0 0px 2px rgba(0, 255, 0, 1);
+}
+
+.hljs-tag:hover {
+	background-color: yellow;
+}
+
+pre.ember-view {
+	tab-size: 4;
+	word-break: normal;
+	word-wrap: normal;
+}
