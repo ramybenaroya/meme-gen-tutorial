@@ -10,32 +10,6 @@ export default Ember.Component.extend({
 		return this.get('editable').toString();
 	}.property('editable'),
 	notEditable: Ember.computed.not('editable'),
-	applyDraggable: function() {
-		Ember.run.scheduleOnce('afterRender', this, function() {
-			this.$('.opener').css('top', this.get('content.openerPosition') || '0px');			
-			if (!this.get('content.closerPosition')) {
-				this.$('.closer').css('bottom', '0px');
-			} else {
-				this.$('.closer').css('top', this.get('content.closerPosition'));	
-			}
-			if (this.get('editable')) {
-				this.$('.closer').draggable({
-					axis: 'y',
-					containment: "parent",
-					stop: function() {
-						this.set('content.closerPosition', this.$('.closer').css('top'));
-					}.bind(this)
-				});
-				this.$('.opener').draggable({
-					axis: 'y',
-					containment: "parent",
-					stop: function() {
-						this.set('content.openerPosition', this.$('.opener').css('top'));
-					}.bind(this)
-				});
-			}
-		});
-	}.on('didInsertElement'),
 	style: Ember.computed.oneWay('backgroundImageStyle'),
 	backgroundImageStyle: function() {
 		return 'background-image: url(' + this.get('content.imgSrc') + ')';
