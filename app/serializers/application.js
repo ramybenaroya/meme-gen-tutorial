@@ -1,4 +1,4 @@
 import DS from 'ember-data';
 
-export default DS.FirebaseAdapter.extend({
+export default DS.FirebaseSerializer.extend({
 });
