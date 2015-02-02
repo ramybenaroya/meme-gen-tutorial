@@ -1,4 +1,5 @@
 import DS from 'ember-data';
+import Ember from 'ember';
 import env from 'meme-gen-tutorial/config/environment';
 
 export default DS.Model.extend({
