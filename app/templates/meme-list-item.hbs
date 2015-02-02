@@ -1,0 +1,21 @@
+  <div class="panel-body">
+    {{meme-item content=view.content}}
+  </div>
+  <div class="panel-footer">
+    {{#if view.content.isMine}}
+      {{#link-to 'meme.edit' meme}}
+        <button type="button" class="btn" aria-label="Left Align">
+          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+        </button>
+      {{/link-to}}
+      <button type="button" class="btn" aria-label="Left Align" {{action 'deleteMeme' meme}}>
+        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+      </button>
+      
+    {{/if}}
+  	<button type="button" {{bind-attr class=':btn view.content.likedByMe:liked'}} aria-label="Left Align" {{action 'toggleLike' view.content}}>
+	  <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+	  <span class='badge' }}>{{view.content.likes}}</span>
+	</button>
+	<span class="label label-info">Created by {{view.content.user.name}}</span>
+  </div>

@@ -1,0 +1,35 @@
+<div class="panel panel-default meme-panel">
+	<div class="panel-heading">
+		<span>{{title}}</span>
+	</div>
+	<div class="panel-body flex">
+		<div class="panel panel-default meme-controls">
+			<div class="panel-body">
+				<div class="form-group">
+					<label>Image URL</label>
+					{{input  classNames="form-control" placeholder="Image URL" value=model.imgSrc}}
+				</div>
+				<div class="form-group">
+					<label>Opener Font Size</label>
+					{{input type="range" classNames="form-control" placeholder="Search" value=model.openerFontSize}}
+				</div>
+				<div class="form-group">
+					<label>Closer Font Size</label>
+					{{input type="range" classNames="form-control" placeholder="Search" value=model.closerFontSize}}
+				</div>
+			</div>
+		</div>
+		{{meme-item editable=true content=model}}
+	</div>
+	<div class="panel-footer align-right">
+		<button type="button" class="btn btn-success" {{action 'saveMeme' model}}>
+			{{actionName}}
+		</button>
+		{{#link-to 'memes.index'}}
+			<button type="button" class="btn btn-default">
+				Cancel
+			</button>
+		{{/link-to}}
+		
+	</div>
+</div>

@@ -1,0 +1,10 @@
+<div class="users">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Filter by Users
+		</div>
+		<div class="panel-body">
+			{{#each user in usersToFilterBy}}{{user-filter-toggler tagName='div' content=user toggleUser='toggleUser' selected=user.selected}}{{/each}}
+		</div>
+	</div>
+</div>

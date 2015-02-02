@@ -24,5 +24,11 @@ export default DS.Model.extend({
 		defaultValue: null
 	}),
 	user: DS.belongsTo('user'),
-	likedBy: DS.hasMany('user')
+	likedBy: DS.hasMany('user'),
+	isMine: function() {
+		return this.get('user.id') === this.get('whoami.id');
+	}.property('user.id', 'whoami.id'),
+	likedByMe: function() {
+		return this.get('likedBy').mapBy('id').contains(this.get('whoami.id'));
+	}.property('likedBy.@each')
 });
