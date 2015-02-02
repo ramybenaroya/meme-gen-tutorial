@@ -25,6 +25,7 @@ export default DS.Model.extend({
 	}),
 	user: DS.belongsTo('user'),
 	likedBy: DS.hasMany('user'),
+	likes: Ember.computed.oneWay('likedBy.length'),
 	isMine: function() {
 		return this.get('user.id') === this.get('whoami.id');
 	}.property('user.id', 'whoami.id'),
