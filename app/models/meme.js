@@ -3,7 +3,7 @@ import env from 'meme-gen-tutorial/config/environment';
 
 export default DS.Model.extend({
 	imgSrc: DS.attr('string', {
-		defaultValue: env.defaultMemeImgSrc
+		defaultValue: env.defaultMemeImageSrc
 	}),
 	opener: DS.attr('string', {
 		defaultValue: 'Opener'
