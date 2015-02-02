@@ -18,12 +18,6 @@ export default DS.Model.extend({
 	closerFontSize: DS.attr('number', {
 		defaultValue: 60
 	}),
-	openerPosition: DS.attr('string', {
-		defaultValue: null
-	}),
-	closerPosition: DS.attr('string', {
-		defaultValue: null
-	}),
 	user: DS.belongsTo('user'),
 	likedBy: DS.hasMany('user'),
 	likes: Ember.computed.oneWay('likedBy.length'),
