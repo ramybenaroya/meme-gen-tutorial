@@ -1,0 +1,32 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/tmp
+/app
+/addon
+/config
+/vendor
+/tests
+
+# dependencies
+/node_modules
+/bower_components
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+testem.log
+.bowerrc
+.editorconfig
+.ember-cli
+.travis.yml
+Brocfile.js
+README.md
+bower.json
+index.js
+package.json
+testem.json
