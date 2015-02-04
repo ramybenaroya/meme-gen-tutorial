@@ -11,23 +11,25 @@ export function initialize(container, application) {
 		singleton: true
 	});
 	application.inject('model', 'whoami', 'user:whoami-proxy');
-	try{
-		if (store.modelFor('user')){
-			application.deferReadiness();
-			store.find('user', config.whoami).then(function(user) {
-				application.register('user:whoami', user, {
-					instantiate: false,
-					singleton: true
-				});
-				application.inject('route', 'whoami', 'user:whoami');
-				application.inject('controller', 'whoami', 'user:whoami');
-				application.advanceReadiness();
-			});	
-		}	
-	} catch(e){
-		application.inject('route', 'whoami', 'user:whoami-proxy');
-		application.inject('controller', 'whoami', 'user:whoami-proxy');
-	}
+	application.inject('route', 'whoami', 'user:whoami-proxy');
+	application.inject('controller', 'whoami', 'user:whoami-proxy');
+	// try{
+	// 	if (store.modelFor('user')){
+	// 		application.deferReadiness();
+	// 		store.find('user', config.whoami).then(function(user) {
+	// 			application.register('user:whoami', user, {
+	// 				instantiate: false,
+	// 				singleton: true
+	// 			});
+	// 			application.inject('route', 'whoami', 'user:whoami');
+	// 			application.inject('controller', 'whoami', 'user:whoami');
+	// 			application.advanceReadiness();
+	// 		});	
+	// 	}	
+	// } catch(e){
+	// 	application.inject('route', 'whoami', 'user:whoami-proxy');
+	// 	application.inject('controller', 'whoami', 'user:whoami-proxy');
+	// }
 }
 
 export default {

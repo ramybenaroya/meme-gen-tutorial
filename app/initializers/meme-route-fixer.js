@@ -3,14 +3,14 @@ import Ember from 'ember';
 export function initialize( /* container, application */ ) {
 	var MemeRoute;
 	try {
-		MemeRoute = window.requireModule('meme-gen-test/routes/meme');
+		MemeRoute = window.requireModule('meme-gen-tutorial/routes/meme');
 	} catch (e) {}
 
 	if (MemeRoute && MemeRoute['default']) {
 		MemeRoute = MemeRoute['default'];
 	} else {
 		MemeRoute = Ember.Route.extend();
-		window.define("meme-gen-test/routes/meme", ["exports"],
+		window.define("meme-gen-tutorial/routes/meme", ["exports"],
 			function(__exports__) {
 				"use strict";
 				__exports__["default"] = MemeRoute;
