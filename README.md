@@ -21,6 +21,7 @@ You will need the following things properly installed on your computer.
 * `cd meme-gen-tutorial`
 * `npm install`
 * `bower install`
+* in `/config/environment.js` change: `whoami`: <your-name-in-lowercase>`
 
 ## Running / Development
 
@@ -40,6 +41,11 @@ Make use of the many generators for code, try `ember help generate` for more det
 
 * `ember build` (development)
 * `ember build --environment production` (production)
+
+### Firebase
+* [https://flickering-fire-9959.firebaseio.com/memeGen](https://flickering-fire-9959.firebaseio.com/memeGen)
+* username: `duda.ember.tutorial@gmail.com`
+* password: `duda1234`
 
 ### Recommended Steps
 
