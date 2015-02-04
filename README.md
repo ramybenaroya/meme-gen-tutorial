@@ -64,6 +64,10 @@ Make use of the many generators for code, try `ember help generate` for more det
   * Handle Cancel by rollbacking changes model and transition back to [`/memes`](http://ramybenaroya.github.io/meme-gen-tutorial/#/spec/memes-route)
 
 
+### Solution
+* `git checkout solution`
+* [http://ramybenaroya.github.io/meme-gen-tutorial](http://ramybenaroya.github.io/meme-gen-tutorial)
+
 
 ## Further Reading / Useful Links
 
