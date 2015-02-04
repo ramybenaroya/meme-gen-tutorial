@@ -21,7 +21,7 @@ You will need the following things properly installed on your computer.
 * `cd meme-gen-tutorial`
 * `npm install`
 * `bower install`
-* in `/config/environment.js` change: `whoami`: <your-name-in-lowercase>`
+* in `/config/environment.js` change: `whoami: <your-name-in-lowercase>`
 
 ## Running / Development
 
