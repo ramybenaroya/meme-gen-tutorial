@@ -17,7 +17,7 @@ You will need the following things properly installed on your computer.
 
 * `npm install -g ember-cli`
 * `npm install -g phantomjs`
-* `git clone https://github.com/ramybenaroya/meme-gen-tutorial.git
+* `git clone https://github.com/ramybenaroya/meme-gen-tutorial.git`
 * `cd meme-gen-tutorial`
 * `npm install`
 * `bower install`
