@@ -61,11 +61,11 @@ Make use of the many generators for code, try `ember help generate` for more det
   * Make a list of all users in the memes sidebar
   * Activate filtering the memes by users
 * [`/memes/create`](http://ramybenaroya.github.io/meme-gen-tutorial/#/spec/create-route) :
-  * Connect the form input controllers to the [`meme-item`](http://ramybenaroya.github.io/meme-gen-tutorial/#/spec/meme-item)
+  * Connect the form inputs to the [`meme-item`](http://ramybenaroya.github.io/meme-gen-tutorial/#/spec/meme-item)
   * Activate Saving
   * Handle Cancel by rollbacking the fresh model and transition back to [`/memes`](http://ramybenaroya.github.io/meme-gen-tutorial/#/spec/memes-route)
 * [`/memes/:meme_id/edit`](http://ramybenaroya.github.io/meme-gen-tutorial/#/spec/edit-route) :
-  * Connect the form input controllers to the [`meme-item`](http://ramybenaroya.github.io/meme-gen-tutorial/#/spec/meme-item)
+  * Connect the form inputs to the [`meme-item`](http://ramybenaroya.github.io/meme-gen-tutorial/#/spec/meme-item)
   * Activate Saving
   * Handle Cancel by rollbacking changes model and transition back to [`/memes`](http://ramybenaroya.github.io/meme-gen-tutorial/#/spec/memes-route)
 
