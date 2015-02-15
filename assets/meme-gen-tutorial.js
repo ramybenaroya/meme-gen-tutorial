@@ -28,6 +28,58 @@ define('meme-gen-tutorial/app', ['exports', 'ember', 'ember/resolver', 'ember/lo
   exports['default'] = App;
 
 });
+define('meme-gen-tutorial/components/code-snippet', ['exports', 'ember', 'meme-gen-tutorial/snippets'], function (exports, Ember, Snippets) {
+
+  'use strict';
+
+  var Highlight = require("highlight.js");
+
+  exports['default'] = Ember['default'].Component.extend({
+    tagName: "pre",
+    classNameBindings: ["language"],
+    unindent: true,
+
+    _unindent: function (src) {
+      if (!this.get("unindent")) {
+        return src;
+      }
+      var match,
+          min,
+          lines = src.split("\n");
+      for (var i = 0; i < lines.length; i++) {
+        match = /^\s*/.exec(lines[i]);
+        if (match && (typeof min === "undefined" || min > match[0].length)) {
+          min = match[0].length;
+        }
+      }
+      if (typeof min !== "undefined" && min > 0) {
+        src = src.replace(new RegExp("(\\n|^)\\s{" + min + "}", "g"), "$1");
+      }
+      return src;
+    },
+
+    source: (function () {
+      return this._unindent((Snippets['default'][this.get("name")] || "").replace(/^(\s*\n)*/, "").replace(/\s*$/, ""));
+    }).property("name"),
+
+    didInsertElement: function () {
+      Highlight.highlightBlock(this.get("element"));
+    },
+
+    language: (function () {
+      var m = /\.(\w+)$/i.exec(this.get("name"));
+      if (m) {
+        switch (m[1].toLowerCase()) {
+          case "js":
+            return "javascript";
+          case "hbs":
+            return "handlebars";
+        }
+      }
+    }).property("name")
+  });
+
+});
 define('meme-gen-tutorial/components/element-highlighter', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
@@ -657,6 +709,22 @@ define('meme-gen-tutorial/serializers/application', ['exports', 'ember-data'], f
 	exports['default'] = DS['default'].FirebaseSerializer.extend({});
 
 });
+define('meme-gen-tutorial/snippets', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = { "create.html": "<div class=\"panel panel-default meme-panel\">\n\t<div class=\"panel-heading\">\n\t\t<span>Create Meme</span>\n\t</div>\n\t<div class=\"panel-body flex\">\n\t\t<div class=\"panel panel-default meme-controls\">\n\t\t\t<div class=\"panel-body\">\n\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t<label>Image URL</label>\n\t\t\t\t\t<!-- {{input placeholder=\"Image URL\" classNames=\"form-control\" value=model.imgSrc}} -->\n\t\t\t\t</div>\n\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t<label>Opener Font Size</label>\n\t\t\t\t\t<!-- {{input type=\"range\" classNames=\"form-control\" value=model.openerFontSize}} -->\n\t\t\t\t</div>\n\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t<label>Closer Font Size</label>\n\t\t\t\t\t<!-- {{input type=\"range\" classNames=\"form-control\" value=model.closerFontSize}} -->\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t\t<!-- {{meme-item editable=true content=model}} -->\n\t</div>\n\t<div class=\"panel-footer align-right\">\n\t\t<!-- onclick: save new meme -->\n\t\t<button type=\"button\" class=\"btn btn-success\">\n\t\t\tCreate\n\t\t</button>\n\t\t<a class=\"ember-view\" href=\"link-to:/memes\">\n\t\t\t<button type=\"button\" class=\"btn btn-default\">\n\t\t\t\tCancel\n\t\t\t</button>\n\t\t</a>\n\t</div>\n</div>",
+    "edit.html": "<div class=\"panel panel-default meme-panel\">\n\t<div class=\"panel-heading\">\n\t\t<span>Edit Meme</span>\n\t</div>\n\t<div class=\"panel-body flex\">\n\t\t<div class=\"panel panel-default meme-controls\">\n\t\t\t<div class=\"panel-body\">\n\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t<label>Image URL</label>\n\t\t\t\t\t<!-- {{input placeholder=\"Image URL\" classNames=\"form-control\" value=model.imgSrc}} -->\n\t\t\t\t</div>\n\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t<label>Opener Font Size</label>\n\t\t\t\t\t<!-- {{input type=\"range\" classNames=\"form-control\" value=model.openerFontSize}} -->\n\t\t\t\t</div>\n\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t<label>Closer Font Size</label>\n\t\t\t\t\t<!-- {{input type=\"range\" classNames=\"form-control\" value=model.closerFontSize}} -->\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t\t<!-- {{meme-item editable=true content=model}} -->\n\t</div>\n\t<div class=\"panel-footer align-right\">\n\t\t<!-- onclick: save meme -->\n\t\t<button type=\"button\" class=\"btn btn-success\">\n\t\t\tSave\n\t\t</button>\n\t\t<a class=\"ember-view\" href=\"link-to:/memes\">\n\t\t\t<button type=\"button\" class=\"btn btn-default\">\n\t\t\t\tCancel\n\t\t\t</button>\n\t\t</a>\n\t</div>\n</div>",
+    "meme-item-editable.html": "<div class=\"meme-item\" style=\"background-image: url(meme.imgSrc)\">\n\t<div class=\"opener\" style=\"font-size: {{openerStyle}};\">\n\t\t<!-- {{text-editor editable=true text=content.opener}} -->\n\t</div>\n\t<div class=\"closer\" style=\"font-size: {{closerStyle}};\">\n\t\t<!-- {{text-editor editable=true text=content.closer}} -->\n\t</div>\n</div>",
+    "meme-item.html": "<div class=\"meme-item not-editable\" style=\"background-image: url(meme.imgSrc)\">\n\t<div class=\"opener\" style=\"font-size: {{openerStyle}};\">\n\t\t<!-- {{text-editor editable=false text=content.opener}} -->\n\t</div>\n\t<div class=\"closer\" style=\"font-size: {{closerStyle}};\">\n\t\t<!-- {{text-editor editable=false text=content.closer}} -->\n\t</div>\n</div>",
+    "meme-list-item-liked.html": "<div class=\"meme-list-item panel panel-default\">\n\t<div class=\"panel-body\">\n\t\t<!-- {{meme-item content=content editable=false}} -->\n\t</div>\n\t<div class=\"panel-footer\">\n\t\t<a href=\"link-to:/memes/:meme_id/edit\">\n\t\t\t<button type=\"button\" class=\"btn\" aria-label=\"Left Align\">\n\t\t\t\t<span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span>\n\t\t\t</button>\n\t\t</a>\n\n\t\t<!-- onclick : delete meme -->\n\t\t<button type=\"button\" class=\"btn\" aria-label=\"Left Align\" >\n\t\t\t<span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span>\n\t\t</button>\n\n\t\t<!-- onclick : toggle like -->\n\t\t<button type=\"button\" class=\"btn liked\" aria-label=\"Left Align\">\n\t\t\t<span class=\"glyphicon glyphicon-heart\" aria-hidden=\"true\"></span>\n\t\t\t<span class=\"badge\">\n\t\t\t\t{{content.likedBy.length}}\n\t\t\t</span>\n\t\t</button>\n\t\t<span class=\"label label-info\">Created by {{content.user.name}}</span>\n\t</div>\n</div>",
+    "meme-list-item-of-another.html": "<div class=\"meme-list-item panel panel-default\">\n\t<div class=\"panel-body\">\n\t\t<!-- {{meme-item content=content editable=false}} -->\n\t</div>\n\t<div class=\"panel-footer\">\n\n\t\t<!-- onclick : toggle like -->\n\t\t<button type=\"button\" class=\"btn\" aria-label=\"Left Align\">\n\t\t\t<span class=\"glyphicon glyphicon-heart\" aria-hidden=\"true\"></span>\n\t\t\t<span class=\"badge\">\n\t\t\t\t{{content.likedBy.length}}\n\t\t\t</span>\n\t\t</button>\n\n\t\t<span class=\"label label-info\">Created by {{content.user.name}}</span>\n\n\t</div>\n</div>",
+    "meme-list-item.html": "<div class=\"meme-list-item panel panel-default\">\n\t<div class=\"panel-body\">\n\t\t<!-- {{meme-item content=content editable=false}} -->\n\t</div>\n\t<div class=\"panel-footer\">\n\n\t\t<a href=\"link-to:/memes/:meme_id/edit\">\n\t\t\t<button type=\"button\" class=\"btn\" aria-label=\"Left Align\">\n\t\t\t\t<span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span>\n\t\t\t</button>\n\t\t</a>\n\n\t\t<!-- onclick : delete meme -->\n\t\t<button type=\"button\" class=\"btn\" aria-label=\"Left Align\" >\n\t\t\t<span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span>\n\t\t</button>\n\n\t\t<!-- onclick : toggle like -->\n\t\t<button type=\"button\" class=\"btn\" aria-label=\"Left Align\">\n\t\t\t<span class=\"glyphicon glyphicon-heart\" aria-hidden=\"true\"></span>\n\t\t\t<span class=\"badge\">\n\t\t\t\t{{content.likedBy.length}}\n\t\t\t</span>\n\t\t</button>\n\n\t\t<span class=\"label label-info\">Created by {{content.user.name}}</span>\n\n\t</div>\n</div>",
+    "memes.html": "<div class=\"memes-container\">\n\t<div class=\"memes-filters\">\n\t\t<div class=\"form-group\">\n\t\t\t<a href=\"link-to:/memes/create\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-default full-width\" aria-label=\"Left Align\">\n\t\t\t\t\t<span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span>\n\t\t\t\t\tCreate a Meme\n\t\t\t\t</button>\n\t\t\t</a>\n\t\t</div>\n\t\t<div class=\"form-group\">\n\t\t\t<input class=\"form-control\" placeholder=\"Filter by meme text\" type=\"text\">\n\t\t</div>\n\t\t<div class=\"users\">\n\t\t\t<div class=\"panel panel-default\">\n\t\t\t\t<div class=\"panel-heading\">\n\t\t\t\t\tFilter by Users\n\t\t\t\t</div>\n\t\t\t\t<div class=\"panel-body\">\n\t\t\t\t\t<!-- \n\t\t\t\t\t{{#each user in model.users}}\n\t\t\t\t\t\t{{user-filter-toggler content=user}}\n\t\t\t\t\t{{/each}}\n\t\t\t\t\t-->\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t<div class=\"memes-list\">\n\t\t<!--\n\t\t{{#each meme in filteredContent}}\n\t\t\t{{meme-list-item content=meme}}\n\t\t{{/each}}\n\t\t-->\n\t</div>\n</div>",
+    "user-filter-toggler-selected.html": "<!-- onclick: toggle selection -->\n<div class=\"label label-success\">\n\tUsername\n</div>",
+    "user-filter-toggler.html": "<!-- onclick: toggle selection -->\n<div class=\"label label-primary\">\n\tUsername\n</div>" };
+
+});
 define('meme-gen-tutorial/templates/application', ['exports'], function (exports) {
 
   'use strict';
@@ -818,6 +886,53 @@ define('meme-gen-tutorial/templates/application', ['exports'], function (exports
         block(env, morph0, context, "link-to", ["memes"], {}, child0, null);
         block(env, morph1, context, "link-to", ["spec"], {}, child1, null);
         content(env, morph2, context, "outlet");
+        return fragment;
+      }
+    };
+  }()));
+
+});
+define('meme-gen-tutorial/templates/components/code-snippet', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      isHTMLBars: true,
+      blockParams: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      build: function build(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createTextNode("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      render: function render(context, env, contextualElement) {
+        var dom = env.dom;
+        var hooks = env.hooks, content = hooks.content;
+        dom.detectNamespace(contextualElement);
+        var fragment;
+        if (env.useFragmentCache && dom.canClone) {
+          if (this.cachedFragment === null) {
+            fragment = this.build(dom);
+            if (this.hasRendered) {
+              this.cachedFragment = fragment;
+            } else {
+              this.hasRendered = true;
+            }
+          }
+          if (this.cachedFragment) {
+            fragment = dom.cloneNode(this.cachedFragment, true);
+          }
+        } else {
+          fragment = this.build(dom);
+        }
+        if (this.cachedFragment) { dom.repairClonedNode(fragment,[0]); }
+        var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+        content(env, morph0, context, "source");
         return fragment;
       }
     };
