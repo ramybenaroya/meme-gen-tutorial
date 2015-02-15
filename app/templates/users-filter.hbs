@@ -4,7 +4,7 @@
 			Filter by Users
 		</div>
 		<div class="panel-body">
-			{{#each user in usersToFilterBy}}{{user-filter-toggler tagName='div' content=user toggleUser='toggleUser' selected=user.selected}}{{/each}}
+			{{#each user in users}}{{user-filter-toggler tagName='div' content=user toggleUser='toggleUser' selected=user.selected}}{{/each}}
 		</div>
 	</div>
 </div>

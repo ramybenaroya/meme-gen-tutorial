@@ -11,7 +11,16 @@
 		<div class="form-group">
 			{{input value=searchTerm classNames='form-control' placeholder='Filter by meme text'}}
 		</div>
-		{{outlet 'users-filter'}}
+		<div class="users">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Filter by Users
+				</div>
+				<div class="panel-body">
+					{{#each user in users}}{{user-filter-toggler tagName='div' content=user toggleUser='toggleUser' selected=user.selected}}{{/each}}
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class="memes-list">
 		{{#each meme in filteredMemes}}

@@ -7,7 +7,6 @@ export default Ember.Component.extend({
 	selected: false,
 	notSelected: Ember.computed.not('selected'),
 	click: function(){
-		this.toggleProperty('selected');
-		this.sendAction('toggleUser', this.get('content.id'), this.get('selected'));
+		this.sendAction('toggleUser', this.get('content.id'), !this.get('selected'));
 	}
 });

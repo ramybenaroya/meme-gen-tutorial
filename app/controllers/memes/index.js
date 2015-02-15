@@ -23,21 +23,32 @@ export default Ember.Controller.extend({
 			return meme.save();
 		}
 	},
-	usersToFilterBy: function(){
-		return this.get('model.users').map(function(user){
-			return Ember.Object.extend({
-				name: user.get('name'), 
-				id: user.get('id'),
-				selected: this.get('filterByUsers').contains(user.get('id'))
-			}).create();
-		}, this);
-	}.property('filterByUsers'),
-	filteredMemes: function(){
+	users: function(){
+		var users = this.get('model.users');
+		if (users){
+			users = users.map(function(user){
+				return Ember.Object.extend({
+					name: user.get('name'), 
+					id: user.get('id'),
+					selected: false
+				}).create();
+			}, this);
+		}
+		return Ember.A(users);
+	}.property('model.users'),
+	updateSelectedUsers: function(){
+		var filterByUsers = this.get('filterByUsers'),
+			users = this.get('users');
+		if (users && filterByUsers){
+			users.forEach(function(user){
+				user.set('selected', filterByUsers.contains(user.get('id')));
+			});	
+		}
+	}.observes('filterByUsers.@each', 'users').on('init'),
+	filteredMemes: Ember.computed.filter('model.memes', function(meme){
 		var filterByUsers = this.get('filterByUsers'),
 			searchTermRegExp = new RegExp(escape(this.get('searchTerm')).toLowerCase());
-		return this.store.filter('meme', function(meme){
 			return (filterByUsers.length === 0 || filterByUsers.contains(meme.get('user.id'))) &&
 					(searchTermRegExp.test(meme.get('opener').toLowerCase()) || searchTermRegExp.test(meme.get('closer').toLowerCase()));
-		});
-	}.property('filterByUsers.@each', 'searchTerm', 'model.memes')
+	}).property('filterByUsers.@each', 'searchTerm', 'model.memes')
 });
