@@ -12,7 +12,7 @@
         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
       </button>
     {{/if}}
-  	<button type="button" {{bind-attr class=':btn content.likedByMe:liked'}} aria-label="Left Align" {{action 'toggleLike' content}}>
+  	<button type="button" class={{':btn content.likedByMe:liked'}} aria-label="Left Align" {{action 'toggleLike' content}}>
 	  <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
 	  <span class='badge'>{{content.likes}}</span>
 	</button>
