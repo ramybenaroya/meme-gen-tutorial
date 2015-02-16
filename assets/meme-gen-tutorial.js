@@ -167,6 +167,9 @@ define('meme-gen-tutorial/components/meme-list-item', ['exports', 'ember'], func
 
   exports['default'] = Ember['default'].Component.extend({
     classNames: ["meme-list-item", "panel", "panel-default"],
+    likeButtonClassName: (function () {
+      return "btn" + (this.get("content.likedByMe") ? " liked" : "");
+    }).property("content.likedByMe"),
     actions: {
       deleteMeme: function (meme) {
         this.sendAction("deleteMeme", meme);
@@ -196,8 +199,7 @@ define('meme-gen-tutorial/components/user-filter-toggler', ['exports', 'ember'],
     selected: false,
     notSelected: Ember['default'].computed.not("selected"),
     click: function () {
-      this.toggleProperty("selected");
-      this.sendAction("toggleUser", this.get("content.id"), this.get("selected"));
+      this.sendAction("toggleUser", this.get("content.id"), !this.get("selected"));
     }
   });
 
@@ -249,21 +251,32 @@ define('meme-gen-tutorial/controllers/memes/index', ['exports', 'ember'], functi
         return meme.save();
       }
     },
-    usersToFilterBy: (function () {
-      return this.get("model.users").map(function (user) {
-        return Ember['default'].Object.extend({
-          name: user.get("name"),
-          id: user.get("id"),
-          selected: this.get("filterByUsers").contains(user.get("id"))
-        }).create();
-      }, this);
-    }).property("filterByUsers"),
-    filteredMemes: (function () {
+    users: (function () {
+      var users = this.get("model.users");
+      if (users) {
+        users = users.map(function (user) {
+          return Ember['default'].Object.extend({
+            name: user.get("name"),
+            id: user.get("id"),
+            selected: false
+          }).create();
+        }, this);
+      }
+      return Ember['default'].A(users);
+    }).property("model.users"),
+    updateSelectedUsers: (function () {
+      var filterByUsers = this.get("filterByUsers"),
+          users = this.get("users");
+      if (users && filterByUsers) {
+        users.forEach(function (user) {
+          user.set("selected", filterByUsers.contains(user.get("id")));
+        });
+      }
+    }).observes("filterByUsers.@each", "users").on("init"),
+    filteredMemes: Ember['default'].computed.filter("model.memes", function (meme) {
       var filterByUsers = this.get("filterByUsers"),
           searchTermRegExp = new RegExp(escape(this.get("searchTerm")).toLowerCase());
-      return this.store.filter("meme", function (meme) {
-        return (filterByUsers.length === 0 || filterByUsers.contains(meme.get("user.id"))) && (searchTermRegExp.test(meme.get("opener").toLowerCase()) || searchTermRegExp.test(meme.get("closer").toLowerCase()));
-      });
+      return (filterByUsers.length === 0 || filterByUsers.contains(meme.get("user.id"))) && (searchTermRegExp.test(meme.get("opener").toLowerCase()) || searchTermRegExp.test(meme.get("closer").toLowerCase()));
     }).property("filterByUsers.@each", "searchTerm", "model.memes")
   });
 
@@ -627,21 +640,6 @@ define('meme-gen-tutorial/routes/memes/create', ['exports', 'ember'], function (
     },
     renderTemplate: function () {
       this.render("meme-with-controls");
-    }
-  });
-
-});
-define('meme-gen-tutorial/routes/memes/index', ['exports', 'ember'], function (exports, Ember) {
-
-  'use strict';
-
-  exports['default'] = Ember['default'].Route.extend({
-    renderTemplate: function () {
-      this.render();
-      this.render("users-filter", {
-        outlet: "users-filter",
-        into: "memes.index"
-      });
     }
   });
 
@@ -1020,7 +1018,7 @@ define('meme-gen-tutorial/templates/components/meme-item', ['exports'], function
       },
       render: function render(context, env, contextualElement) {
         var dom = env.dom;
-        var hooks = env.hooks, get = hooks.get, element = hooks.element, inline = hooks.inline;
+        var hooks = env.hooks, get = hooks.get, attribute = hooks.attribute, inline = hooks.inline;
         dom.detectNamespace(contextualElement);
         var fragment;
         if (env.useFragmentCache && dom.canClone) {
@@ -1041,10 +1039,12 @@ define('meme-gen-tutorial/templates/components/meme-item', ['exports'], function
         var element0 = dom.childAt(fragment, [0]);
         var element1 = dom.childAt(fragment, [2]);
         var morph0 = dom.createMorphAt(element0,0,1);
+        var attrMorph0 = dom.createAttrMorph(element0, 'style');
         var morph1 = dom.createMorphAt(element1,0,1);
-        element(env, element0, context, "bind-attr", [], {"style": get(env, context, "openerStyle")});
+        var attrMorph1 = dom.createAttrMorph(element1, 'style');
+        attribute(env, attrMorph0, element0, "style", get(env, context, "openerStyle"));
         inline(env, morph0, context, "text-editor", [], {"text": get(env, context, "content.opener"), "editable": get(env, context, "editable")});
-        element(env, element1, context, "bind-attr", [], {"style": get(env, context, "closerStyle")});
+        attribute(env, attrMorph1, element1, "style", get(env, context, "closerStyle"));
         inline(env, morph1, context, "text-editor", [], {"text": get(env, context, "content.closer"), "editable": get(env, context, "editable")});
         return fragment;
       }
@@ -1218,7 +1218,7 @@ define('meme-gen-tutorial/templates/components/meme-list-item', ['exports'], fun
       },
       render: function render(context, env, contextualElement) {
         var dom = env.dom;
-        var hooks = env.hooks, get = hooks.get, inline = hooks.inline, block = hooks.block, element = hooks.element, content = hooks.content;
+        var hooks = env.hooks, get = hooks.get, inline = hooks.inline, block = hooks.block, attribute = hooks.attribute, element = hooks.element, content = hooks.content;
         dom.detectNamespace(contextualElement);
         var fragment;
         if (env.useFragmentCache && dom.canClone) {
@@ -1240,11 +1240,12 @@ define('meme-gen-tutorial/templates/components/meme-list-item', ['exports'], fun
         var element2 = dom.childAt(element1, [2]);
         var morph0 = dom.createMorphAt(dom.childAt(fragment, [0]),0,1);
         var morph1 = dom.createMorphAt(element1,0,1);
+        var attrMorph0 = dom.createAttrMorph(element2, 'class');
         var morph2 = dom.createMorphAt(dom.childAt(element2, [3]),-1,-1);
         var morph3 = dom.createMorphAt(dom.childAt(element1, [4]),0,-1);
         inline(env, morph0, context, "meme-item", [], {"content": get(env, context, "content")});
         block(env, morph1, context, "if", [get(env, context, "content.isMine")], {}, child0, null);
-        element(env, element2, context, "bind-attr", [], {"class": ":btn content.likedByMe:liked"});
+        attribute(env, attrMorph0, element2, "class", get(env, context, "likeButtonClassName"));
         element(env, element2, context, "action", ["toggleLike", get(env, context, "content")], {});
         content(env, morph2, context, "content.likes");
         content(env, morph3, context, "content.user.name");
@@ -3201,7 +3202,7 @@ define('meme-gen-tutorial/templates/meme-list-item', ['exports'], function (expo
       },
       render: function render(context, env, contextualElement) {
         var dom = env.dom;
-        var hooks = env.hooks, get = hooks.get, inline = hooks.inline, block = hooks.block, element = hooks.element, content = hooks.content;
+        var hooks = env.hooks, get = hooks.get, inline = hooks.inline, block = hooks.block, attribute = hooks.attribute, element = hooks.element, content = hooks.content;
         dom.detectNamespace(contextualElement);
         var fragment;
         if (env.useFragmentCache && dom.canClone) {
@@ -3223,14 +3224,15 @@ define('meme-gen-tutorial/templates/meme-list-item', ['exports'], function (expo
         var element2 = dom.childAt(element1, [2]);
         var morph0 = dom.createMorphAt(dom.childAt(fragment, [1]),0,1);
         var morph1 = dom.createMorphAt(element1,0,1);
+        var attrMorph0 = dom.createAttrMorph(element2, 'class');
         var morph2 = dom.createMorphAt(dom.childAt(element2, [3]),-1,-1);
         var morph3 = dom.createMorphAt(dom.childAt(element1, [4]),0,-1);
-        inline(env, morph0, context, "meme-item", [], {"content": get(env, context, "view.content")});
-        block(env, morph1, context, "if", [get(env, context, "view.content.isMine")], {}, child0, null);
-        element(env, element2, context, "bind-attr", [], {"class": ":btn view.content.likedByMe:liked"});
-        element(env, element2, context, "action", ["toggleLike", get(env, context, "view.content")], {});
-        content(env, morph2, context, "view.content.likes");
-        content(env, morph3, context, "view.content.user.name");
+        inline(env, morph0, context, "meme-item", [], {"content": get(env, context, "content")});
+        block(env, morph1, context, "if", [get(env, context, "content.isMine")], {}, child0, null);
+        attribute(env, attrMorph0, element2, "class", ":btn content.likedByMe:liked");
+        element(env, element2, context, "action", ["toggleLike", get(env, context, "content")], {});
+        content(env, morph2, context, "content.likes");
+        content(env, morph3, context, "content.user.name");
         return fragment;
       }
     };
@@ -3706,6 +3708,47 @@ define('meme-gen-tutorial/templates/memes/index', ['exports'], function (exports
         hasRendered: false,
         build: function build(dom) {
           var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, get = hooks.get, inline = hooks.inline;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          if (this.cachedFragment) { dom.repairClonedNode(fragment,[0,1]); }
+          var morph0 = dom.createMorphAt(fragment,0,1,contextualElement);
+          inline(env, morph0, context, "user-filter-toggler", [], {"tagName": "div", "content": get(env, context, "user"), "toggleUser": "toggleUser", "selected": get(env, context, "user.selected")});
+          return fragment;
+        }
+      };
+    }());
+    var child2 = (function() {
+      return {
+        isHTMLBars: true,
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
           var el1 = dom.createTextNode("			");
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -3738,7 +3781,7 @@ define('meme-gen-tutorial/templates/memes/index', ['exports'], function (exports
         }
       };
     }());
-    var child2 = (function() {
+    var child3 = (function() {
       return {
         isHTMLBars: true,
         blockParams: 0,
@@ -3819,6 +3862,34 @@ define('meme-gen-tutorial/templates/memes/index', ['exports'], function (exports
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n		");
         dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","users");
+        var el3 = dom.createTextNode("\n			");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","panel panel-default");
+        var el4 = dom.createTextNode("\n				");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","panel-heading");
+        var el5 = dom.createTextNode("\n					Filter by Users\n				");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n				");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","panel-body");
+        var el5 = dom.createTextNode("\n					");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createTextNode("\n				");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("\n			");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n		");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n	");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
@@ -3858,12 +3929,12 @@ define('meme-gen-tutorial/templates/memes/index', ['exports'], function (exports
         var element0 = dom.childAt(fragment, [1]);
         var morph0 = dom.createMorphAt(dom.childAt(element0, [1]),0,1);
         var morph1 = dom.createMorphAt(dom.childAt(element0, [3]),0,1);
-        var morph2 = dom.createMorphAt(element0,4,5);
+        var morph2 = dom.createMorphAt(dom.childAt(element0, [5, 1, 3]),0,1);
         var morph3 = dom.createMorphAt(dom.childAt(fragment, [3]),0,1);
         block(env, morph0, context, "link-to", ["memes.create"], {}, child0, null);
         inline(env, morph1, context, "input", [], {"value": get(env, context, "searchTerm"), "classNames": "form-control", "placeholder": "Filter by meme text"});
-        inline(env, morph2, context, "outlet", ["users-filter"], {});
-        block(env, morph3, context, "each", [get(env, context, "filteredMemes")], {"keyword": "meme"}, child1, child2);
+        block(env, morph2, context, "each", [get(env, context, "users")], {"keyword": "user"}, child1, null);
+        block(env, morph3, context, "each", [get(env, context, "filteredMemes")], {"keyword": "meme"}, child2, child3);
         return fragment;
       }
     };
@@ -5609,7 +5680,7 @@ define('meme-gen-tutorial/templates/users-filter', ['exports'], function (export
           fragment = this.build(dom);
         }
         var morph0 = dom.createMorphAt(dom.childAt(fragment, [1, 3]),0,1);
-        block(env, morph0, context, "each", [get(env, context, "usersToFilterBy")], {"keyword": "user"}, child0, null);
+        block(env, morph0, context, "each", [get(env, context, "users")], {"keyword": "user"}, child0, null);
         return fragment;
       }
     };
@@ -6076,20 +6147,6 @@ define('meme-gen-tutorial/tests/unit/routes/memes/create-test', ['ember-qunit'],
   // needs: ['controller:foo']
 
 });
-define('meme-gen-tutorial/tests/unit/routes/memes/index-test', ['ember-qunit'], function (ember_qunit) {
-
-  'use strict';
-
-  ember_qunit.moduleFor("route:memes/index", "MemesIndexRoute", {});
-
-  ember_qunit.test("it exists", function () {
-    var route = this.subject();
-    ok(route);
-  });
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
-
-});
 define('meme-gen-tutorial/tests/unit/routes/spec-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
@@ -6245,7 +6302,7 @@ catch(err) {
 if (runningTests) {
   require("meme-gen-tutorial/tests/test-helper");
 } else {
-  require("meme-gen-tutorial/app")["default"].create({"name":"meme-gen-tutorial","version":"0.0.0.87aa0a56"});
+  require("meme-gen-tutorial/app")["default"].create({"name":"meme-gen-tutorial","version":"0.0.0.5592b9fd"});
 }
 
 /* jshint ignore:end */
