@@ -11,8 +11,8 @@
 	<button type="button" class="btn" aria-label="Left Align" {{action 'deleteMeme' content}}>
 	<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 	</button>
-	{{/if}}
-	<button type="button" class={{likeButtonClassName}} aria-label="Left Align" {{action 'toggleLike' content}}>
+	{{/if}} '
+	<button type="button" class="btn {{if content.likedByMe 'liked'}}" aria-label="Left Align" {{action 'toggleLike' content}}>
 	<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
 	<span class='badge'>{{content.likes}}</span>
 	</button>

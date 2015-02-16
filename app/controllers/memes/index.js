@@ -15,10 +15,11 @@ export default Ember.Controller.extend({
 			}
 		},
 		toggleLike: function(meme){
+			var currentUser = this.store.getById('user', this.get('whoami.id'));
 			if (meme.get('likedByMe')){
-				meme.get('likedBy').removeObject(this.whoami);
+				meme.get('likedBy').removeObject(currentUser);
 			} else {
-				meme.get('likedBy').addObject(this.whoami);
+				meme.get('likedBy').addObject(currentUser);
 			}
 			return meme.save();
 		}
